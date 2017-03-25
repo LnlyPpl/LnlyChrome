@@ -26,4 +26,8 @@ window.onload=function(){
     chrome.storage.local.get("active", updateActiveStatus)
 
     $('#slider').on("change", onOff);
+
+    $("#settingsButton").on("click", function() {
+        chrome.tabs.create({url:"options.html"});
+    })
 }
