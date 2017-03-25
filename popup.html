@@ -61,22 +61,30 @@
     </style>
 </head>
 <body style="background-color:powderblue;">
+
+<script
+    src="imports/jquery-3.2.0.min.js">
+</script>
+<script src="popup.js"></script>
+
 <marquee><h2>Lnly Ppl</h2></marquee>
 <img src = tumblr_o605t15rQA1u8mbpxo1_500.gif style="width:304px;height:228px;">
 <br>
 <i>"Sometimes we all get a little lonely"</i>
 <h3>Turn Lnly Ppl On/Off</h3>
 <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" id = "slider">
     <div class="slider round"></div>
 </label>
 <br>
+<span id="s1"></span>
+<br>
 <h3>Statistics</h3>
-Number of hours spent on sites in past 24 hours :
+Number of hours spent on sites in past 24 hours : <span id = t4></span>
 <br>
-Number of hours spent on sites total:
+Number of hours spent on sites total:  <span id = tt></span>
 <br>
-Number of text messages sent:
+Number of text messages sent:  <span id = texts></span>
 
 <br>
 <a href = "options.html"> Click Here for Settings </a>
