@@ -16,13 +16,26 @@ window.onload = function () {
         ],
         controller: {
             insertItem: function(item) {
+                var time = item.time;
+                chrome.runtime.sendMessage({
+                    type: "added_website",
+                    url: item.url,
+                    time: 60000 // TODO: convert this to milliseconds as int
+                });
 
             },
             updateItem: function(item) {
-
+                chrome.runtime.sendMessage({
+                    type: "updated_website",
+                    url:item.url,
+                    time: 60000 // TODO: convert this to milliseconds as int
+                });
             },
             deleteItem: function(item) {
-
+                chrome.runtime.sendMessage({
+                    type: "removed_website",
+                    url:item.url
+                });
             }
         }
     })
@@ -39,13 +52,24 @@ window.onload = function () {
 
         controller: {
             insertItem: function(item) {
-
+                chrome.runtime.sendMessage({
+                    type: "added_friend",
+                    name: item.name,
+                    phoneNumber: item.phoneNumber
+                });
             },
             updateItem: function(item) {
-
+                chrome.runtime.sendMessage({
+                    type: "updated_friend",
+                    name: item.name,
+                    phoneNumber: item.phoneNumber
+                });
             },
             deleteItem: function(item) {
-
+                chrome.runtime.sendMessage({
+                    type: "removed_friend",
+                    name: item.name
+                });
             }
         }
     })
