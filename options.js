@@ -32,10 +32,16 @@ let initialize = function (storage) {
         width: "100%",
         data: storage.websites,
         fields: [
-            { name: "url", type: "text", validate: "required" , title: "Website URL"},
+            { name: "url", type: "text", title: "Website URL",
+                validate: [
+                    {validator: function(value, item) { return (value.includes('.com') || value.includes('.net') ||
+                            value.includes('.org') || value.includes('.gov'));}, message:"That's not a valid website URL"}
+                ]
+            },
             { name: "time", type: "duration" , title: "Visitation Time",
                 validate: [
-                    {validator: function(value, item) { return value >= 60000;}, message:"Please choose a duration greater than 1 minute."}
+                    {validator: function(value, item) { return value >= 60000;}, message:"Please choose a duration greater than 1 minute."},
+                    {validator: function(value, item) { return value <= 86400000;}, message:"Please choose a duration less than 24 hours."}
                 ]
             },
             { type: "control" }
