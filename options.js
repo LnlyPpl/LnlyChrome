@@ -11,6 +11,7 @@ window.onload = function () {
             storage.websites = storage.websites || [];
             storage.textHistory = storage.textHistory || 0;
             storage.webHistory = storage.webHistory || [];
+            storage.messageChoice = storage.messageChoice || 1;
             resolve(storage);
         });
     });
@@ -24,7 +25,6 @@ window.onload = function () {
 let initialize = function (storage) {
     $('.duration-picker').durationPicker();
     $('#newWebsite').on("click", addWebsiteTableRow);
-
 
     $('#websiteGrid').jsGrid({
         inserting: true,
@@ -113,13 +113,64 @@ let initialize = function (storage) {
             name: name
         });
     })
-    $('#mySelect').on('change',function(){
-        alert($('#mySelect').val());
+
+    $("#messagePicker").val(storage.messageChoice);
+    $('#messagePicker').on('change',function(){
         chrome.runtime.sendMessage({
-            type: "message_type",
-            text: $('#mySelect').val()
+            type: "updated_message_choice",
+            messageChoice: $('#messagePicker').val()
         });
     });
+
+    // Grab elements, create settings, etc.
+    var video = document.getElementById('video');
+
+    // Get access to the camera!
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Not adding `{ audio: true }` since we only want video now
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                video.src = window.URL.createObjectURL(stream);
+                video.play();
+        });
+    }
+
+    // Elements for taking the snapshot
+    var canvas = $('#canvas')[0];
+    var context = canvas.getContext('2d');
+
+    // Trigger photo take
+    $('#snap').on('click', function() {
+	     context.drawImage(video, 0, 0, 640, 480);
+       let randomFriend = storage.friends[Math.floor(storage.friends.length * Math.random())].phoneNumber
+       let imageData = decodeURI(canvas.toDataURL('image/jpeg', 1.0)).replace(/^data:image\/jpeg;base64,/, "");
+       $.ajax({
+         type: "POST",
+         url: "http://lnlyppl.com/processface",
+         contentType: "application/json",
+         data: JSON.stringify({
+           name: storage.name,
+           phoneNumber: randomFriend,
+           image: imageData
+         })
+       }).done((data) => {
+         $('#emotionMessages').append(`<div class="alert alert-info">Our high powered servers have determined you are feeling: ${data}.</div>`);
+       }).fail((data) => {
+         $('#emotionMessages').append(`<div class="alert alert-error">Our high powered servers have encountered an error.</div>`);
+       });
+       $('#video').addClass('hidden');
+       $('#snap').addClass('hidden');
+       $('#canvas').removeClass('hidden');
+       $('#resetWebcam').removeClass('hidden');
+    });
+
+    $('#resetWebcam').on('click', () => {
+      $('#video').removeClass('hidden');
+      $('#snap').removeClass('hidden');
+      $('#canvas').addClass('hidden');
+      $('#resetWebcam').addClass('hidden');
+      $('#emotionMessages > .alert').remove();
+    })
 
 }
 
