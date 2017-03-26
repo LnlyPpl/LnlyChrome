@@ -16,19 +16,22 @@ window.onload = function () {
         ],
         controller: {
             insertItem: function(item) {
-                var time = item.time;
+                var ar = item.time.split(',');
+                var t = ar[0].split('h')[0]*3600000 + ar[1].split('m')[0]*60000 + ar[2].split('s')[0]*1000;
                 chrome.runtime.sendMessage({
                     type: "added_website",
                     url: item.url,
-                    time: 60000 // TODO: convert this to milliseconds as int
+                    time: t
                 });
 
             },
             updateItem: function(item) {
+                var ar = item.time.split(',');
+                var t = ar[0].split('h')[0]*3600000 + ar[1].split('m')[0]*60000 + ar[2].split('s')[0]*1000;
                 chrome.runtime.sendMessage({
                     type: "updated_website",
                     url:item.url,
-                    time: 60000 // TODO: convert this to milliseconds as int
+                    time: t
                 });
             },
             deleteItem: function(item) {
