@@ -19,10 +19,8 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
+                <h1>LnlyPpl Extension Options</h1>
                 <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Panel title</h3>
-                </div>
                 <div class="panel-body">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
@@ -35,19 +33,32 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="websites">
+                            <br/>
+                            <div class="well">
+                                Add websites for LnlyPpl to keep track of. If you pass the duration threshold for a website, your friends will be alerted.
+                            </div>
                             <div id="websiteGrid"></div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="friends">
+                            <br/>
+                            <div class="well">
+                                Add friends for LnlyPpl to contact when you appear to be bored.
+                            </div>
                             <div id="friendGrid"></div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="settings">
+                            <br/>
+                            <div class="well">
+                                Additional settings to customize LnlyPpl.
+                            </div>
                             <div class="form-group">
                                 <label class="control-label">Your Name</label>
                                 <input type="text" class="form-control" placeholder="Name" id="name" />
                             </div>
                             <div class="btn btn-primary" id="saveNameButton">Save</div>
+                            <br /><br/>
                             <div class="form-group">
-                                <label class="control-label">Text Content Options</label>
+                                <label class="control-label">Text Message Content Options</label>
                                 <form>
                                     <select id="messagePicker">
                                         <option value="1">(NAME) has spent (TIME) on (SITE) ... You should hit 'em up!</option>
