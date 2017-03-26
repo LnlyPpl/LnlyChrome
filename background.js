@@ -2,13 +2,17 @@ let storage = {};
 
 let initPromise = new Promise((resolve, reject) => {
     chrome.storage.sync.get(data => {
+        // TODO: REMOVE THIS LINE OF CODE. THIS IS FOR TESTING PURPOSES (CLEARING STORAGE)
+        data = {};
+        // ******************************************************************************
+
         storage = data;
         // Verify fields exist, otherwise create them
         storage.friends = storage.friends || [];
         storage.friends = storage.friends || [];
         storage.websites = storage.websites || [];
         storage.textHistory = storage.textHistory || 0;
-        storage.webHistory = storage.textHistory || [];
+        storage.webHistory = storage.webHistory || [];
         resolve();
     });
 });
@@ -29,7 +33,7 @@ let activeTabs = {}
 let isEnabled = true;
 
 let decrementActiveWebsite = (website, tabId) => {
-    activeWebsites[website].openTabs = activeWebsites[website].filter(x => x !== tabId);
+    activeWebsites[website].openTabs = activeWebsites[website].openTabs.filter(x => x !== tabId);
 
     if (activeWebsites[website].openTabs.length !== 0) {
         return;
@@ -45,7 +49,7 @@ let incrementActiveWebsite = (website, tabId) => {
 
         websiteInfo = storage.websites.filter(x => x.url === website)[0];
 
-        activeWebsites[website].intervalId = createTriggerFunction(website, time);
+        activeWebsites[website].intervalId = createTriggerFunction(website, websiteInfo.time);
     } else {
         activeWebsites[website].openTabs.push(tabId);
     }
@@ -74,11 +78,15 @@ initPromise.then(() => {
         // Update matching website counts.
         let newMatchingWebsites = [];
 
+        if (!activeTabs[tabId]) {
+            activeTabs[tabId] = [];
+        }
+
         for (let matchingWebsite of activeTabs[tabId]) {
             if (!contains(tab.url, matchingWebsite)) {
                 decrementActiveWebsite(matchingWebsite, tabId);
             } else {
-                newMatchingWebsites.push(matchingWebsite, tabId);
+                newMatchingWebsites.push(matchingWebsite);
             }
         }
 
@@ -109,6 +117,10 @@ initPromise.then(() => {
     });
 
     chrome.tabs.onRemoved.addListener(tabId => {
+        if (!activeTabs[tabId]) {
+            return;
+        }
+
         for (let website of activeTabs[tabId]) {
             decrementActiveWebsite(website, tabId);
         }
@@ -132,6 +144,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.type === "removed_website") {
         storage.websites = storage.websites.filter(x => x.url !== request.url);
 
+        if (!activeWebsites[request.url]) {
+            return;
+        }
+
         for (let tabId of activeWebsites[request.url].openTabs) {
             activeTabs[tabId] = activeTabs[tabId].filter(x => x !== request.url);
         }
@@ -145,6 +161,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
 
             storage.websites[i].time = request.time;
+
+        }
+
+        if (!activeWebsites[request.url]) {
+            return;
         }
 
         clearInterval(activeWebsites[request.url].intervalId);
