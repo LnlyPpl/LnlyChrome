@@ -220,7 +220,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             storage.active = true;
 
             // Recreate the intervals to reset timers
-            for (let activeWebsite of activeWebsites) {
+            for (let activeWebsite in activeWebsites) {
                 let time = storage.websites.filter(x => x.url === activeWebsite.url)[0].time;
                 activeWebsites[activeWebsite] = createTriggerFunction(activeWebsite.url, time);
             }
