@@ -2,21 +2,21 @@
 function onOff(){
     var x = $("#slider").is(':checked');
     if(x){
-        $("#s1").text("On")
+        $("#s1").text("LnlyPpl Enabled")
     }
     else{
-        $("#s1").text("Off")
+        $("#s1").text("LnlyPpl Disabled")
     }
 }
 
 function updateActiveStatus(isActive){
     if(isActive){
         $("#slider").prop('checked', true);
-        $("#s1").text("On")
+        $("#s1").text("LnlyPpl Enabled")
     }
     else{
         $("#slider").prop('checked', false);
-        $("#s1").text("Off")
+        $("#s1").text("LnlyPpl Disabled")
     }
 }
 
@@ -40,6 +40,11 @@ window.onload=function(){
         console.log(storage);
         updateActiveStatus(storage.active);
         $("#text").text(storage.textHistory);
+        var hours = 0;
+        for (let site in storage.webHistory){
+            hours += site.time;
+        }
+        $('#tt').text(hours);
     });
 
     $('#slider').on("change", onOff);

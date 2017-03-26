@@ -59,35 +59,47 @@
             border-radius: 50%;
         }
     </style>
+    <script src="imports/jquery-3.2.0.min.js"></script>
+    <link href="imports/bootstrap.min.css" rel="stylesheet">
+    <script src="imports/bootstrap.min.js"></script>
+    <script src="popup.js"></script>
 </head>
 <body style="background-color:powderblue;">
-
-<script
-    src="imports/jquery-3.2.0.min.js">
-</script>
-<script src="popup.js"></script>
 
 <marquee><h2>Lnly Ppl</h2></marquee>
 <img src = tumblr_o605t15rQA1u8mbpxo1_500.gif style="width:304px;height:228px;">
 <br>
-<i>"Sometimes we all get a little lonely"</i>
-<h3>Turn Lnly Ppl On/Off</h3>
-<label class="switch">
-    <input type="checkbox" id = "slider">
-    <div class="slider round"></div>
-</label>
-<br>
+<div style="display:table; margin:0 auto;">
+    <i>"Sometimes we all get a little lonely"</i>
+</div>
+<div style="display:table; margin:0 auto;">
+    <h3 id="s1">Turn Lnly Ppl On/Off</h3>
+</div>
+<div style="display:table; margin:0 auto;">
+    <label class="switch">
+        <input type="checkbox" id = "slider">
+        <div class="slider round"></div>
+    </label>
+</div>
+<!--<br>
 <span id="s1"></span>
-<br>
+<br>-->
+
+<div class="panel panel-default">
+    <div class="panel-heading">Statistics</div>
+    <table class="table">
+        <tr><td>Number of hours spent on sites total:</td><td id="tt"></td></tr>
+        <tr><td>Number of text messages sent:</td><td id="text"></td></tr>
+    </table>
+</div>
+<!--
 <h3>Statistics</h3>
 Number of hours spent on sites in past 24 hours : <span id = "t4"></span>
 <br>
 Number of hours spent on sites total:  <span id = "tt"></span>
 <br>
 Number of text messages sent:  <span id = "text"></span>
-
-<br>
-<a href = "#" id="settingsButton"> Click Here for Settings </a>
-
+-->
+<button type="button" class="btn btn-primary btn-lg btn-block" id="settingsButton">Settings</button>
 </body>
 </html>
