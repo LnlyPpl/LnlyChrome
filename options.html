@@ -29,6 +29,7 @@
                         <li role="presentation" class="active"><a href="#websites" aria-controls="home" role="tab" data-toggle="tab">Websites</a></li>
                         <li role="presentation"><a href="#friends" aria-controls="profile" role="tab" data-toggle="tab">Friends</a></li>
                         <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+                        <li role="presentation"><a href="#webcam" aria-controls="webcam" role="tab" data-toggle="tab">Webcam</a></li>
                     </ul>
 
                     <!-- Tab panes -->
@@ -57,6 +58,11 @@
                                     </select>
                                 </form>
                             </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="webcam">
+                            <video id="video" width="640" height="480" autoplay></video>
+                            <button id="snap">Snap Photo</button>
+                            <canvas id="canvas" width="640" height="480"></canvas>
                         </div>
                     </div>
                 </div>

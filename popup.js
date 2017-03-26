@@ -11,7 +11,6 @@ function onOff(){
 
 function updateActiveStatus(isActive){
     if(isActive){
-
         $("#slider").prop('checked', true);
         $("#s1").text("On")
     }
