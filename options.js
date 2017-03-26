@@ -1,6 +1,27 @@
 
-
 window.onload = function () {
+
+    let initPromise = new Promise((resolve, reject) => {
+        chrome.storage.sync.get(storage => {
+            // Verify fields exist, otherwise create them
+            if (!storage.hasOwnProperty("active")) {
+                storage.active = true;
+            }
+            storage.friends = storage.friends || [];
+            storage.websites = storage.websites || [];
+            storage.textHistory = storage.textHistory || 0;
+            storage.webHistory = storage.webHistory || [];
+            resolve(storage);
+        });
+    });
+
+    initPromise.then(storage => {
+        console.log(storage);
+        initialize(storage);
+    });
+}
+
+let initialize = function (storage) {
     $('.duration-picker').durationPicker();
     $('#newWebsite').on("click", addWebsiteTableRow);
 
@@ -8,16 +29,16 @@ window.onload = function () {
     $('#websiteGrid').jsGrid({
         inserting: true,
         editing: true,
-        width:"100%",
+        width: "100%",
         fields: [
             { name: "url", type: "text", validate: "required" },
             { name: "time", type: "duration" },
             { type: "control" }
         ],
         controller: {
-            insertItem: function(item) {
+            insertItem: function (item) {
                 var ar = item.time.split(',');
-                var t = ar[0].split('h')[0]*3600000 + ar[1].split('m')[0]*60000 + ar[2].split('s')[0]*1000;
+                var t = ar[0].split('h')[0] * 3600000 + ar[1].split('m')[0] * 60000 + ar[2].split('s')[0] * 1000;
                 chrome.runtime.sendMessage({
                     type: "added_website",
                     url: item.url,
@@ -25,19 +46,19 @@ window.onload = function () {
                 });
 
             },
-            updateItem: function(item) {
+            updateItem: function (item) {
                 var ar = item.time.split(',');
-                var t = ar[0].split('h')[0]*3600000 + ar[1].split('m')[0]*60000 + ar[2].split('s')[0]*1000;
+                var t = ar[0].split('h')[0] * 3600000 + ar[1].split('m')[0] * 60000 + ar[2].split('s')[0] * 1000;
                 chrome.runtime.sendMessage({
                     type: "updated_website",
-                    url:item.url,
+                    url: item.url,
                     time: t
                 });
             },
-            deleteItem: function(item) {
+            deleteItem: function (item) {
                 chrome.runtime.sendMessage({
                     type: "removed_website",
-                    url:item.url
+                    url: item.url
                 });
             }
         }
@@ -46,7 +67,7 @@ window.onload = function () {
     $('#friendGrid').jsGrid({
         inserting: true,
         editing: true,
-        width:"100%",
+        width: "100%",
         fields: [
             { name: "Name", type: "text", validate: "required" },
             { name: "Phone", type: "text" },
@@ -54,49 +75,47 @@ window.onload = function () {
         ],
 
         controller: {
-            insertItem: function(item) {
+            insertItem: function (item) {
                 chrome.runtime.sendMessage({
                     type: "added_friend",
                     name: item.name,
                     phoneNumber: item.phoneNumber
                 });
             },
-            updateItem: function(item) {
+            updateItem: function (item) {
                 chrome.runtime.sendMessage({
                     type: "updated_friend",
                     name: item.name,
                     phoneNumber: item.phoneNumber
                 });
             },
-            deleteItem: function(item) {
+            deleteItem: function (item) {
                 chrome.runtime.sendMessage({
                     type: "removed_friend",
                     name: item.name
                 });
             }
         }
-    })
-
-    ;
+    });
 }
 
-var generateWebsiteTableRow = function() {
+var generateWebsiteTableRow = function () {
     var row = $("<tr><td><input type='text'></td><td><input class='duration-picker' type='text' name='duration-picker'></td></td>");
     row.durationPicker();
     return row;
 }
 var populateWebsiteTable = function () {
     chrome.storage.local.get("websites", function (sites) {
-        sites.forEach(function(item, index) {
+        sites.forEach(function (item, index) {
 
         })
     })
 }
-var addWebsiteTableRow = function() {
+var addWebsiteTableRow = function () {
     generateWebsiteTableRow().show().appendTo($('#websiteTable tbody'));
 }
 
-var DurationField = function(config) {
+var DurationField = function (config) {
     jsGrid.Field.call(this, config);
 };
 
@@ -105,29 +124,29 @@ DurationField.prototype = new jsGrid.Field({
     align: "center",              // redefine general property 'align'
 
 
-    itemTemplate: function(value) {
+    itemTemplate: function (value) {
         return value;
     },
 
-    insertTemplate: function(value) {
+    insertTemplate: function (value) {
         this._insertPicker = $("<div><input class='duration-picker' type='text' name='duration-picker'></div>");
         this._insertPicker.find('input').durationPicker();
         this._insertPicker.show();
         return this._insertPicker;
     },
 
-    editTemplate: function(value) {
+    editTemplate: function (value) {
         this._editPicker = $("<div><input class='duration-picker' type='text' name='duration-picker'></div>");
         this._editPicker.find('input').durationPicker();
         this._editPicker.show();
         return this._editPicker;
     },
 
-    insertValue: function() {
+    insertValue: function () {
         return this._insertPicker.find('.duration-picker').val();
     },
 
-    editValue: function() {
+    editValue: function () {
         return this._editPicker.find('.duration-picker').val();
     }
 });

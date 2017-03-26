@@ -8,7 +8,10 @@ let initPromise = new Promise((resolve, reject) => {
 
         storage = data;
         // Verify fields exist, otherwise create them
-        storage.friends = storage.friends || [];
+
+        if (!storage.hasOwnProperty("active")) {
+            storage.active = true;
+        }
         storage.friends = storage.friends || [];
         storage.websites = storage.websites || [];
         storage.textHistory = storage.textHistory || 0;
@@ -29,8 +32,6 @@ let activeWebsites = {};
 // websiteName: { openTabs: 0, intervalId: 0 };
 let activeTabs = {}
 // tabId : [websiteNames]
-
-let isEnabled = true;
 
 let decrementActiveWebsite = (website, tabId) => {
     activeWebsites[website].openTabs = activeWebsites[website].openTabs.filter(x => x !== tabId);
@@ -57,7 +58,7 @@ let incrementActiveWebsite = (website, tabId) => {
 
 let createTriggerFunction = (url, time) => {
     return setInterval(() => {
-        if (!isEnabled) {
+        if (!storage.active) {
             return;
         }
 
@@ -73,6 +74,7 @@ let createTriggerFunction = (url, time) => {
 
 // Once data initialized from local storage set up the listeners
 initPromise.then(() => {
+
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
         // Update matching website counts.
@@ -187,7 +189,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     } else if (request.type === "toggle") {
         if (request.toggle) {
-            isEnabled = true;
+            storage.active = true;
 
             // Recreate the intervals to reset timers
             for (let activeWebsite of activeWebsites) {
@@ -195,7 +197,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 activeWebsites[activeWebsite] = createTriggerFunction(activeWebsite.url, time);
             }
         } else {
-            isEnabled = false;
+            storage.active = false;
             // Doesn't actually clear intervals... When the intervals fire, they are ignored
         }
     }
