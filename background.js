@@ -93,6 +93,9 @@ let createTriggerFunction = (url, time) => {
             return;
         }
 
+        storage.textHistory+=1;
+        chrome.storage.sync.set(storage);
+
         submitSendTextRequests(url, time);
 
     }, time);

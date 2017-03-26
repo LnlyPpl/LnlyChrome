@@ -39,6 +39,7 @@ window.onload=function(){
     initPromise.then(storage => {
         console.log(storage);
         updateActiveStatus(storage.active);
+        $("#text").text(storage.textHistory);
     });
 
     $('#slider').on("change", onOff);
