@@ -2,13 +2,9 @@ let storage = {};
 
 let initPromise = new Promise((resolve, reject) => {
     chrome.storage.sync.get(data => {
-        // TODO: REMOVE THIS LINE OF CODE. THIS IS FOR TESTING PURPOSES (CLEARING STORAGE)
-        data = {};
-        // ******************************************************************************
-
         storage = data;
-        // Verify fields exist, otherwise create them
 
+        // Verify fields exist, otherwise create them
         if (!storage.hasOwnProperty("active")) {
             storage.active = true;
         }
@@ -16,6 +12,7 @@ let initPromise = new Promise((resolve, reject) => {
         storage.websites = storage.websites || [];
         storage.textHistory = storage.textHistory || 0;
         storage.webHistory = storage.webHistory || [];
+        storage.name = storage.name || "";
         resolve();
     });
 });
@@ -200,6 +197,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             storage.active = false;
             // Doesn't actually clear intervals... When the intervals fire, they are ignored
         }
+    } else if (request.type === "updated_name") {
+        storage.name = request.name;
     }
 
     chrome.storage.sync.set(storage);
