@@ -13,6 +13,7 @@ let initPromise = new Promise(resolve => {
         storage.textHistory = storage.textHistory || 0;
         storage.webHistory = storage.webHistory || [];
         storage.name = storage.name || "";
+        storage.messageChoice = storage.messageChoice || 1;
         resolve();
     });
 });
@@ -75,7 +76,7 @@ let submitSendTextRequests = (websiteUrl, time) => {
 
         xhr.setRequestHeader("Content-type", "application/json");
         var data = JSON.stringify({
-            messageChoice: 0,
+            messageChoice: storage.messageChoice,
             name: storage.name,
             website: websiteUrl,
             time: convertToTimeString(time),
@@ -230,6 +231,8 @@ chrome.runtime.onMessage.addListener(request => {
         }
     } else if (request.type === "updated_name") {
         storage.name = request.name;
+    } else if (request.type === "updated_message_choice") {
+        storage.messageChoice = request.messageChoice;
     }
 
     chrome.storage.sync.set(storage);
