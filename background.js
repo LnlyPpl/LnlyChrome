@@ -26,7 +26,7 @@ let contains = (obj1, obj2) => {
 */
 
 let activeWebsites = {};
-// websiteName: { openTabs: 0, intervalId: 0 };
+// websiteName: { openTabs: [tabIds], intervalId: 0 };
 let activeTabs = {}
 // tabId : [websiteNames]
 
@@ -53,17 +53,49 @@ let incrementActiveWebsite = (website, tabId) => {
     }
 }
 
+let convertToTimeString = (time) => {
+    let hours = Math.floor(time / 3600000);
+    time %= 3600000;
+    let minutes = Math.floor(time / 60000);
+    time %= 60000;
+    let seconds = Math.floor(time / 1000);
+
+    return `${hours}h ${minutes}m ${seconds}s`;
+};
+
+let submitSendTextRequests = (websiteUrl, time) => {
+    let shuffled = storage.friends.slice(0).sort(() => .5 - Math.random());
+    let selectedFriends = shuffled.slice(0, 3);
+
+    for (let friend of selectedFriends) {
+
+        let xhr = new XMLHttpRequest();
+        var url = "http://www.lnlyppl.com/sendtext";
+        xhr.open("POST", url, true);
+
+        xhr.setRequestHeader("Content-type", "application/json");
+        var data = JSON.stringify({
+            messageChoice: 0,
+            name: storage.name,
+            website: websiteUrl,
+            time: convertToTimeString(time),
+            phoneNumber: friend.phoneNumber
+        });
+
+        xhr.send(data);
+    }
+};
+
 let createTriggerFunction = (url, time) => {
     return setInterval(() => {
         if (!storage.active) {
             return;
         }
 
-        // TODO: ... 
-        console.log(url, "TRIGGERED");
+        submitSendTextRequests(url, time);
 
     }, websiteInfo.time);
-}
+};
 
 /* 
 * Chrome tab change event listeners 
@@ -131,7 +163,6 @@ initPromise.then(() => {
 /* 
 * Chrome message handlers
 */
-
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === "added_website") {
