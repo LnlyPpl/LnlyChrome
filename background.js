@@ -76,7 +76,7 @@ let submitSendTextRequests = (websiteUrl, time) => {
 
         xhr.setRequestHeader("Content-type", "application/json");
         var data = JSON.stringify({
-            messageChoice: storage.messageChoice,
+            messageChoice: Number(storage.messageChoice),
             name: storage.name,
             website: websiteUrl,
             time: convertToTimeString(time),
