@@ -30,9 +30,10 @@ let initialize = function (storage) {
         inserting: true,
         editing: true,
         width: "100%",
+        data: storage.websites,
         fields: [
-            { name: "url", type: "text", validate: "required" },
-            { name: "time", type: "duration" },
+            { name: "url", type: "text", validate: "required" , title: "Website URL"},
+            { name: "time", type: "duration" , title: "Visitation Time"},
             { type: "control" }
         ],
         controller: {
@@ -68,9 +69,10 @@ let initialize = function (storage) {
         inserting: true,
         editing: true,
         width: "100%",
+        data: storage.friends,
         fields: [
-            { name: "Name", type: "text", validate: "required" },
-            { name: "Phone", type: "text" },
+            { name: "name", type: "text", validate: "required" , title: "Name"},
+            { name: "phoneNumber", type: "text", title: "Phone Number" },
             { type: "control" }
         ],
 
@@ -97,6 +99,15 @@ let initialize = function (storage) {
             }
         }
     });
+
+    $('#name').val(storage.name);
+$('#saveNameButton').on('click', function() {
+    var name = $('#name').val();
+    chrome.runtime.sendMessage({
+        type: "updated_name",
+        name: name
+    });
+})
 }
 
 var generateWebsiteTableRow = function () {
