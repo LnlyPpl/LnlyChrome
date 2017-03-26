@@ -35,28 +35,9 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="websites">
                             <div id="websiteGrid"></div>
-                            <!--<table id="websiteTable" class="table table-striped">
-                                <thead>
-                                <tr><td>URL</td><td>Time Limit</td></tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>netflix.com</td><td><input class="duration-picker" type="text" name="duration-picker"></td></tr>
-                                    <tr><td>facebook.com</td><td><input class="duration-picker" type="text" name="duration-picker"></td></tr>
-                                </tbody>
-                            </table>
-                            <div class="btn btn-primary" id="newWebsite">New</div>-->
                         </div>
                         <div role="tabpanel" class="tab-pane" id="friends">
                             <div id="friendGrid"></div>
-                            <!--<table id="friendsList" class="table table-striped">
-                                <thead>
-                                <tr><td>Name</td><td>Phone Number</td></tr>
-                                </thead>
-                                <tbody>
-                                <tr><td>Billy</td><td><input type="text" placeholder="1234567890" pattern="(\d\d\d\\d\d\d\\d\d\d\d)" minlength="10" maxlength="10"/></td></tr>
-                                <tr><td>Sue</td><td><input type="text" placeholder="1234567890" pattern="(\d\d\d\d\d\d\d\d\d\d)" minlength="10" maxlength="10"/></td></tr>
-                                </tbody>
-                            </table>-->
                         </div>
                         <div role="tabpanel" class="tab-pane" id="settings">
                             <div class="form-group">
@@ -64,6 +45,18 @@
                                 <input type="text" class="form-control" placeholder="Name" id="name" />
                             </div>
                             <div class="btn btn-primary" id="saveNameButton">Save</div>
+                            <div class="form-group">
+                                <label class="control-label">Text Content Options</label>
+                                <form>
+                                    <select id="mySelect">
+                                        <option value="1">(NAME) has spent (TIME) on (SITE) ... You should hit 'em up!</option>
+                                        <option value="2">(NAME) has been on (SITE) for a while, consider shooting them a text</option>
+                                        <option value="3">Have you spoken with (NAME) recently, they seem lonely</option>
+                                        <option value="4">Drag (NAME) away from (SITE). They've been on there for (TIME)</option>
+                                        <option value="5">(TIME) is how long (NAME) has been on (SITE). They could use some attention. </option>
+                                    </select>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

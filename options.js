@@ -102,13 +102,21 @@ let initialize = function (storage) {
     });
 
     $('#name').val(storage.name);
-$('#saveNameButton').on('click', function() {
-    var name = $('#name').val();
-    chrome.runtime.sendMessage({
-        type: "updated_name",
-        name: name
+    $('#saveNameButton').on('click', function() {
+        var name = $('#name').val();
+        chrome.runtime.sendMessage({
+            type: "updated_name",
+            name: name
+        });
+    })
+    $('#mySelect').on('change',function(){
+        alert($('#mySelect').val());
+        chrome.runtime.sendMessage({
+            type: "message_type",
+            text: $('#mySelect').val()
+        });
     });
-})
+
 }
 
 var generateWebsiteTableRow = function () {
