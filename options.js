@@ -38,22 +38,18 @@ let initialize = function (storage) {
         ],
         controller: {
             insertItem: function (item) {
-                var ar = item.time.split(',');
-                var t = ar[0].split('h')[0] * 3600000 + ar[1].split('m')[0] * 60000 + ar[2].split('s')[0] * 1000;
                 chrome.runtime.sendMessage({
                     type: "added_website",
                     url: item.url,
-                    time: t
+                    time: item.time
                 });
 
             },
             updateItem: function (item) {
-                var ar = item.time.split(',');
-                var t = ar[0].split('h')[0] * 3600000 + ar[1].split('m')[0] * 60000 + ar[2].split('s')[0] * 1000;
                 chrome.runtime.sendMessage({
                     type: "updated_website",
                     url: item.url,
-                    time: t
+                    time: item.time
                 });
             },
             deleteItem: function (item) {
@@ -136,7 +132,14 @@ DurationField.prototype = new jsGrid.Field({
 
 
     itemTemplate: function (value) {
-        return value;
+        var hour = Math.floor(value/3600000);
+        var min = Math.floor((value - hour*3600000)/60000);
+        var sec = Math.floor((value - hour*3600000 - min*60000)/1000);
+        var str = "";
+        if (hour > 0) str += hour + " Hour(s) ";
+        if (min > 0) str += min + " Minute(s) ";
+        if (sec > 0) str += sec + " Second(s)";
+        return str;
     },
 
     insertTemplate: function (value) {
@@ -147,18 +150,28 @@ DurationField.prototype = new jsGrid.Field({
     },
 
     editTemplate: function (value) {
+        var hour = Math.floor(value/3600000);
+        var min = Math.floor((value - hour*3600000)/60000);
+        var sec = Math.floor((value - hour*3600000 - min*60000)/1000);
         this._editPicker = $("<div><input class='duration-picker' type='text' name='duration-picker'></div>");
-        this._editPicker.find('input').durationPicker();
+        var dp = this._editPicker.find('input').durationPicker();
+        dp.setvalues({hours:hour, minutes:min, seconds: sec});
         this._editPicker.show();
         return this._editPicker;
     },
 
     insertValue: function () {
-        return this._insertPicker.find('.duration-picker').val();
+        var line = this._insertPicker.find('.duration-picker').val();
+        var ar = line.split(',');
+        var t = ar[0].split('h')[0] * 3600000 + ar[1].split('m')[0] * 60000 + ar[2].split('s')[0] * 1000;
+        return t;
     },
 
     editValue: function () {
-        return this._editPicker.find('.duration-picker').val();
+        var line = this._editPicker.find('.duration-picker').val();
+        var ar = line.split(',');
+        var t = ar[0].split('h')[0] * 3600000 + ar[1].split('m')[0] * 60000 + ar[2].split('s')[0] * 1000;
+        return t;
     }
 });
 
