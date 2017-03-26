@@ -68,7 +68,12 @@ let initialize = function (storage) {
         data: storage.friends,
         fields: [
             { name: "name", type: "text", validate: "required" , title: "Name"},
-            { name: "phoneNumber", type: "text", title: "Phone Number" },
+            { name: "phoneNumber", type: "phone", title: "Phone Number",
+                validate: [
+                    {validator: function(value, item) { return value.length == 12;}, message:"Please use a 10-digit phone number."},
+                    {validator: function(value, item) {return !isNaN(value);}, message:"Please use only numbers."}
+                ]
+            },
             { type: "control" }
         ],
 
@@ -176,3 +181,92 @@ DurationField.prototype = new jsGrid.Field({
 });
 
 jsGrid.fields.duration = DurationField;
+
+var DurationField = function (config) {
+    jsGrid.Field.call(this, config);
+};
+
+DurationField.prototype = new jsGrid.Field({
+
+    align: "center",              // redefine general property 'align'
+
+
+    itemTemplate: function (value) {
+        var hour = Math.floor(value/3600000);
+        var min = Math.floor((value - hour*3600000)/60000);
+        var sec = Math.floor((value - hour*3600000 - min*60000)/1000);
+        var str = "";
+        if (hour > 0) str += hour + " Hour(s) ";
+        if (min > 0) str += min + " Minute(s) ";
+        if (sec > 0) str += sec + " Second(s)";
+        return str;
+    },
+
+    insertTemplate: function (value) {
+        this._insertPicker = $("<div><input class='duration-picker' type='text' name='duration-picker'></div>");
+        this._insertPicker.find('input').durationPicker();
+        this._insertPicker.show();
+        return this._insertPicker;
+    },
+
+    editTemplate: function (value) {
+        var hour = Math.floor(value/3600000);
+        var min = Math.floor((value - hour*3600000)/60000);
+        var sec = Math.floor((value - hour*3600000 - min*60000)/1000);
+        this._editPicker = $("<div><input class='duration-picker' type='text' name='duration-picker'></div>");
+        var dp = this._editPicker.find('input').durationPicker();
+        dp.setvalues({hours:hour, minutes:min, seconds: sec});
+        this._editPicker.show();
+        return this._editPicker;
+    },
+
+    insertValue: function () {
+        var line = this._insertPicker.find('.duration-picker').val();
+        var ar = line.split(',');
+        var t = ar[0].split('h')[0] * 3600000 + ar[1].split('m')[0] * 60000 + ar[2].split('s')[0] * 1000;
+        return t;
+    },
+
+    editValue: function () {
+        var line = this._editPicker.find('.duration-picker').val();
+        var ar = line.split(',');
+        var t = ar[0].split('h')[0] * 3600000 + ar[1].split('m')[0] * 60000 + ar[2].split('s')[0] * 1000;
+        return t;
+    }
+});
+
+jsGrid.fields.duration = DurationField;
+
+var PhoneField = function(config) {
+    jsGrid.Field.call(this, config);
+};
+
+PhoneField.prototype = new jsGrid.Field({
+
+    align: "center",              // redefine general property 'align'
+
+
+    itemTemplate: function(value) {
+        return value;
+    },
+
+    insertTemplate: function(value) {
+        return this._insertPicker = $("<input>");
+    },
+
+    editTemplate: function(value) {
+        this._editPicker = $("<input>");
+        this._editPicker.val(value.substring(2));
+        return this._editPicker;
+    },
+
+    insertValue: function() {
+        return "+1" + this._insertPicker.val();
+    },
+
+    editValue: function() {
+        return "+1" + this._editPicker.val();
+    }
+});
+
+jsGrid.fields.phone = PhoneField;
