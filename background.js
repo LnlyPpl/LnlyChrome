@@ -1,6 +1,6 @@
 let storage = {};
 
-let initPromise = new Promise((resolve, reject) => {
+let initPromise = new Promise(resolve => {
     chrome.storage.sync.get(data => {
         storage = data;
 
@@ -45,7 +45,7 @@ let incrementActiveWebsite = (website, tabId) => {
     if (!activeWebsites[website]) {
         activeWebsites[website] = { openTabs: [tabId] };
 
-        websiteInfo = storage.websites.filter(x => x.url === website)[0];
+        let websiteInfo = storage.websites.filter(x => x.url === website)[0];
 
         activeWebsites[website].intervalId = createTriggerFunction(website, websiteInfo.time);
     } else {
@@ -94,7 +94,7 @@ let createTriggerFunction = (url, time) => {
 
         submitSendTextRequests(url, time);
 
-    }, websiteInfo.time);
+    }, time);
 };
 
 /* 
@@ -143,7 +143,7 @@ initPromise.then(() => {
             }
 
             activeTabs[tab.id].push(website.url);
-            incrementActiveWebsite(website.url, tabId);
+            incrementActiveWebsite(website.url, tab.id);
         }
     });
 
@@ -164,7 +164,7 @@ initPromise.then(() => {
 * Chrome message handlers
 */
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(request => {
     if (request.type === "added_website") {
         storage.websites.push({
             url: request.url,
@@ -185,7 +185,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         clearInterval(activeWebsites[request.url].intervalId);
         delete activeWebsites[request.url];
     } else if (request.type === "updated_website") {
-        for (i = 0; i < storage.websites.length; i++) {
+        for (let i = 0; i < storage.websites.length; i++) {
             if (storage.websites[i].url !== request.url) {
                 continue;
             }
@@ -208,7 +208,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.type === "removed_friend") {
         storage.friends = storage.friends.filter(x => x.name !== request.name);
     } else if (request.type === "updated_friend") {
-        for (i = 0; i < storage.friends.length; i++) {
+        for (let i = 0; i < storage.friends.length; i++) {
             if (storage.friends[i].name !== request.name) {
                 continue;
             }
