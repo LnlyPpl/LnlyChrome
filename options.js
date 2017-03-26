@@ -11,6 +11,7 @@ window.onload = function () {
             storage.websites = storage.websites || [];
             storage.textHistory = storage.textHistory || 0;
             storage.webHistory = storage.webHistory || [];
+            storage.messageChoice = storage.messageChoice || 1;
             resolve(storage);
         });
     });
@@ -112,11 +113,12 @@ let initialize = function (storage) {
             name: name
         });
     })
-    $('#mySelect').on('change',function() {
-        alert($('#mySelect').val());
+
+    $("#messagePicker").val(storage.messageChoice);
+    $('#messagePicker').on('change',function(){
         chrome.runtime.sendMessage({
-            type: "message_type",
-            text: $('#mySelect').val()
+            type: "updated_message_choice",
+            messageChoice: $('#messagePicker').val()
         });
     });
 

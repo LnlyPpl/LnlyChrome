@@ -13,6 +13,7 @@ let initPromise = new Promise(resolve => {
         storage.textHistory = storage.textHistory || 0;
         storage.webHistory = storage.webHistory || [];
         storage.name = storage.name || "";
+        storage.messageChoice = storage.messageChoice || 1;
         resolve();
     });
 });
@@ -21,8 +22,8 @@ let contains = (obj1, obj2) => {
     return obj1.indexOf(obj2) !== -1;
 }
 
-/* 
-* Website Tracking Helpers 
+/*
+* Website Tracking Helpers
 */
 
 let activeWebsites = {};
@@ -75,7 +76,7 @@ let submitSendTextRequests = (websiteUrl, time) => {
 
         xhr.setRequestHeader("Content-type", "application/json");
         var data = JSON.stringify({
-            messageChoice: 0,
+            messageChoice: storage.messageChoice,
             name: storage.name,
             website: websiteUrl,
             time: convertToTimeString(time),
@@ -97,8 +98,8 @@ let createTriggerFunction = (url, time) => {
     }, time);
 };
 
-/* 
-* Chrome tab change event listeners 
+/*
+* Chrome tab change event listeners
 */
 
 // Once data initialized from local storage set up the listeners
@@ -160,7 +161,7 @@ initPromise.then(() => {
     });
 });
 
-/* 
+/*
 * Chrome message handlers
 */
 
@@ -230,6 +231,8 @@ chrome.runtime.onMessage.addListener(request => {
         }
     } else if (request.type === "updated_name") {
         storage.name = request.name;
+    } else if (request.type === "updated_message_choice") {
+        storage.messageChoice = request.messageChoice;
     }
 
     chrome.storage.sync.set(storage);
