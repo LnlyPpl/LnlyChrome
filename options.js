@@ -247,7 +247,11 @@ PhoneField.prototype = new jsGrid.Field({
 
 
     itemTemplate: function(value) {
-        return value;
+        var first = value.substr(0,2);
+        var second = value.substr(2,3);
+        var third = value.substr(5,3);
+        var last = value.substr(8);
+        return first+" ("+second+") "+third+"-"+last;
     },
 
     insertTemplate: function(value) {
