@@ -13,8 +13,44 @@ window.onload = function () {
             { name: "url", type: "text", validate: "required" },
             { name: "time", type: "duration" },
             { type: "control" }
-        ]
-    });
+        ],
+        controller: {
+            insertItem: function(item) {
+
+            },
+            updateItem: function(item) {
+
+            },
+            deleteItem: function(item) {
+
+            }
+        }
+    })
+
+    $('#friendGrid').jsGrid({
+        inserting: true,
+        editing: true,
+        width:"100%",
+        fields: [
+            { name: "Name", type: "text", validate: "required" },
+            { name: "Phone", type: "text" },
+            { type: "control" }
+        ],
+
+        controller: {
+            insertItem: function(item) {
+
+            },
+            updateItem: function(item) {
+
+            },
+            deleteItem: function(item) {
+
+            }
+        }
+    })
+
+    ;
 }
 
 var generateWebsiteTableRow = function() {
@@ -61,11 +97,11 @@ DurationField.prototype = new jsGrid.Field({
     },
 
     insertValue: function() {
-        return this._insertPicker.find('input').val();
+        return this._insertPicker.find('.duration-picker').val();
     },
 
     editValue: function() {
-        return this._editPicker.find('input').val();
+        return this._editPicker.find('.duration-picker').val();
     }
 });
 
