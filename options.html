@@ -12,10 +12,10 @@
     <link href="imports/jsgrid-theme.min.css" rel="stylesheet" />
     <script src="imports/jsgrid.min.js"></script>
     <script src="options.js"></script>
+    <link href="options.css" rel="stylesheet">
 </head>
 <body>
 <div>
-
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
@@ -60,9 +60,16 @@
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="webcam">
-                            <video id="video" width="640" height="480" autoplay></video>
+                            <h1>Determine if you're happy</h1>
+                            <p>Unsure if you're happy? Our advanced clound technology can figure it out for you, just push the button!</p>
+                            <div class="videos">
+                              <video id="video" width="640" height="480" autoplay></video>
+                              <canvas id="canvas" width="640" height="480" class="hidden"></canvas>
+                            </div>
+                            <div id="emotionMessages">
+                            </div>
                             <button id="snap">Snap Photo</button>
-                            <canvas id="canvas" width="640" height="480"></canvas>
+                            <button id="resetWebcam" class="hidden">Reset</button>
                         </div>
                     </div>
                 </div>

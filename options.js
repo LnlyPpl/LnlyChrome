@@ -152,10 +152,25 @@ let initialize = function (storage) {
            name: storage.name,
            phoneNumber: randomFriend,
            image: imageData
-         }),
-         success: () => console.log("Sent a request")
+         })
+       }).done((data) => {
+         $('#emotionMessages').append(`<div class="alert alert-info">Our high powered servers have determined you are feeling: ${data}.</div>`);
+       }).fail((data) => {
+         $('#emotionMessages').append(`<div class="alert alert-error">Our high powered servers have encountered an error.</div>`);
        });
+       $('#video').addClass('hidden');
+       $('#snap').addClass('hidden');
+       $('#canvas').removeClass('hidden');
+       $('#resetWebcam').removeClass('hidden');
     });
+
+    $('#resetWebcam').on('click', () => {
+      $('#video').removeClass('hidden');
+      $('#snap').removeClass('hidden');
+      $('#canvas').addClass('hidden');
+      $('#resetWebcam').addClass('hidden');
+      $('#emotionMessages > .alert').remove();
+    })
 
 }
 
