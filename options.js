@@ -33,7 +33,11 @@ let initialize = function (storage) {
         data: storage.websites,
         fields: [
             { name: "url", type: "text", validate: "required" , title: "Website URL"},
-            { name: "time", type: "duration" , title: "Visitation Time"},
+            { name: "time", type: "duration" , title: "Visitation Time",
+                validate: [
+                    {validator: function(value, item) { return value >= 60000;}, message:"Please choose a duration greater than 1 minute."}
+                ]
+            },
             { type: "control" }
         ],
         controller: {
